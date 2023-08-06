@@ -1,0 +1,12 @@
+aiocache==0.12.1
+fastapi==0.101.0
+itsdangerous==2.1.2
+joserfc==0.6.0
+mypy==1.4.1
+pydantic==2.1.1
+pydantic-settings==2.0.2
+pytest==7.4.0
+python-dotenv==1.0.0
+python-multipart==0.0.6
+starlette>=0.27.0
+uvicorn[standard]==0.23.2
