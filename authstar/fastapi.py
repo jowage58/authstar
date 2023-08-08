@@ -402,27 +402,6 @@ class RouteSecurity:
             client_id: typing.Annotated[str | None, fastapi.Form()] = None,
             client_secret: typing.Annotated[str | None, fastapi.Form()] = None,
         ) -> fastapi.responses.JSONResponse:
-            if grant_type is None:
-                return fastapi.responses.JSONResponse(
-                    content={
-                        "error": "invalid_request",
-                        "error_description": "Missing required 'grant_type' parameter",
-                    },
-                    status_code=400,
-                )
-
-            if grant_type != "client_credentials":
-                return fastapi.responses.JSONResponse(
-                    content={
-                        "error": "unsupported_grant_type",
-                        "error_description": (
-                            f"The grant_type '{grant_type}' is not supported, "
-                            "only 'client_credentials' is allowed."
-                        ),
-                    },
-                    status_code=400,
-                )
-
             auth_client = self.client(request)
             if (
                 not auth_client.is_authenticated
@@ -431,13 +410,45 @@ class RouteSecurity:
                 and client_secret is not None
             ):
                 try:
-                    auth_client = await on_auth_basic(client_id, client_secret)
+                    basic_auth_client = await on_auth_basic(client_id, client_secret)
                 except Exception:
-                    logger.exception("auth from client_id/client_secret failed")
+                    logger.exception("basic auth from client_id/client_secret failed")
+                else:
+                    if basic_auth_client:
+                        auth_client = basic_auth_client
+
+            if grant_type is None:
+                error_msg = "invalid_request"
+                error_descr = "Missing required 'grant_type' parameter"
+                logger.warning("%s: %s - %s", auth_client, error_msg, error_descr)
+                return fastapi.responses.JSONResponse(
+                    content={
+                        "error": error_msg,
+                        "error_description": error_descr,
+                    },
+                    status_code=400,
+                )
+
+            if grant_type != "client_credentials":
+                error_msg = "unsupported_grant_type"
+                error_descr = (
+                    f"The grant_type '{grant_type}' is not supported, "
+                    "only 'client_credentials' is allowed."
+                )
+                logger.warning("%s: %s - %s", auth_client, error_msg, error_descr)
+                return fastapi.responses.JSONResponse(
+                    content={
+                        "error": error_msg,
+                        "error_description": error_descr,
+                    },
+                    status_code=400,
+                )
 
             if not auth_client.is_authenticated:
+                error_msg = "invalid_client"
+                logger.warning("%s: %s", auth_client, error_msg)
                 return fastapi.responses.JSONResponse(
-                    content={"error": "invalid_client"},
+                    content={"error": error_msg},
                     status_code=401,
                 )
 
@@ -445,13 +456,16 @@ class RouteSecurity:
                 requested_scopes = set(scope.split())
                 client_scopes = set(auth_client.scopes)
                 if missing_scopes := requested_scopes - client_scopes:
+                    error_msg = "invalid_scope"
+                    error_descr = (
+                        "Client is not authorized for scopes: "
+                        f"{', '.join(missing_scopes)}"
+                    )
+                    logger.warning("%s: %s - %s", auth_client, error_msg, error_descr)
                     return fastapi.responses.JSONResponse(
                         content={
-                            "error": "invalid_scope",
-                            "error_description": (
-                                "Client is not authorized for scopes: "
-                                f"{', '.join(missing_scopes)}"
-                            ),
+                            "error": error_msg,
+                            "error_description": error_descr,
                         },
                         status_code=400,
                     )
