@@ -52,7 +52,7 @@ app.add_middleware(
 ```
 
 The `scope_key` parameter defines the dict key in the ASGI Scope where the
-client information will be stored. The default is `autstar.client`. For
+client information will be stored. The default is `authstar.client`. For
 example, using `scope_key="users"` would match what the **Starlette**
 Authentication Middleware uses and allow for using `request.user` if using
 that framework or a framework built on **Starlette**.
