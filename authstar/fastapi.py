@@ -6,6 +6,7 @@ Provides route security and an OAuth2 token endpoint.
 import collections.abc
 import dataclasses
 import ipaddress
+import logging
 import typing
 
 import fastapi
@@ -15,6 +16,8 @@ import fastapi.security
 
 from .middleware import AuthstarMiddleware
 from .types import BasicAuthenticator, Client
+
+logger = logging.getLogger(__name__)
 
 
 class UnauthorizedError(fastapi.HTTPException):
@@ -420,16 +423,19 @@ class RouteSecurity:
                     status_code=400,
                 )
 
-            auth_client: Client | None
+            auth_client = self.client(request)
             if (
-                not (auth_client := self.client(request))
+                not auth_client.is_authenticated
                 and on_auth_basic is not None
                 and client_id is not None
                 and client_secret is not None
             ):
-                auth_client = await on_auth_basic(client_id, client_secret)
+                try:
+                    auth_client = await on_auth_basic(client_id, client_secret)
+                except Exception:
+                    logger.exception("auth from client_id/client_secret failed")
 
-            if not auth_client or not auth_client.is_authenticated:
+            if not auth_client.is_authenticated:
                 return fastapi.responses.JSONResponse(
                     content={"error": "invalid_client"},
                     status_code=401,
