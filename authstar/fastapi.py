@@ -17,6 +17,32 @@ from .middleware import AuthstarMiddleware
 from .types import BasicAuthenticator, Client
 
 
+class UnauthorizedError(fastapi.HTTPException):
+    """HTTP 401 Unauthorized Error."""
+
+    def __init__(
+        self,
+        client: Client,
+        detail: typing.Any = None,
+        headers: dict[str, str] | None = None,
+    ) -> None:
+        super().__init__(status_code=401, detail=detail, headers=headers)
+        self.client = client
+
+
+class ForbiddenError(fastapi.HTTPException):
+    """HTTP 403 Forbidden Error."""
+
+    def __init__(
+        self,
+        client: Client,
+        detail: typing.Any = None,
+        headers: dict[str, str] | None = None,
+    ) -> None:
+        super().__init__(status_code=403, detail=detail, headers=headers)
+        self.client = client
+
+
 @dataclasses.dataclass
 class OAuth2TokenRequest:
     """OAuth2 Token Request.
@@ -161,9 +187,10 @@ class RouteSecurity:
         >>> async def healthcheck() -> dict[str, str]:
         >>>    return {"status": "ok"}
         """
+        auth_client = self.client(request)
         if (client := request.client) and ipaddress.ip_address(client.host).is_private:
-            return self.client(request)
-        raise fastapi.HTTPException(status_code=403)
+            return auth_client
+        raise ForbiddenError(client=auth_client)
 
     def authenticated(self, request: fastapi.Request) -> Client:
         """Returns the client if the request came from an authenticated client.
@@ -201,7 +228,7 @@ class RouteSecurity:
         auth_client = self.client(request)
         if auth_client.is_authenticated:
             return auth_client
-        raise fastapi.HTTPException(status_code=401)
+        raise UnauthorizedError(client=auth_client)
 
     def scopes(
         self, request: fastapi.Request, scopes: fastapi.security.SecurityScopes
@@ -252,7 +279,7 @@ class RouteSecurity:
         for scope in scopes.scopes:
             if scope in auth_client.scopes:
                 return auth_client
-        raise fastapi.HTTPException(status_code=403)
+        raise ForbiddenError(client=auth_client)
 
     @staticmethod
     def openapi_api_key(

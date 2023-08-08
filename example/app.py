@@ -1,9 +1,11 @@
 import logging
 
 import fastapi
+import fastapi.exception_handlers
 from starlette.middleware.sessions import SessionMiddleware
 
 import authstar
+import authstar.fastapi
 from example import routes, security, settings
 
 logger = logging.getLogger(__name__)
@@ -35,6 +37,14 @@ app.include_router(
     routes.router,
     dependencies=[fastapi.Security(security.route_security.authenticated)],
 )
+
+
+@app.exception_handler(authstar.fastapi.UnauthorizedError)
+async def on_unauthorized_error(
+    request: fastapi.Request, exc: authstar.fastapi.UnauthorizedError
+) -> fastapi.Response:
+    logger.warning("on_unauthorized_error: %s - %r", request, exc)
+    return await fastapi.exception_handlers.http_exception_handler(request, exc)
 
 
 def run() -> None:
