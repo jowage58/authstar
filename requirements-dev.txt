@@ -1,4 +1,4 @@
-aiocache==0.12.1
+aiocache==0.12.2
 fastapi==0.101.0
 itsdangerous==2.1.2
 joserfc==0.6.0
