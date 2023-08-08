@@ -131,7 +131,7 @@ class RouteSecurity:
         """
         self.scope_key = scope_key
 
-    def auth_client_from(self, request: fastapi.Request) -> Client:
+    def client(self, request: fastapi.Request) -> Client:
         """Returns the client from the given Request."""
         return typing.cast(Client, request.scope[self.scope_key])
 
@@ -162,7 +162,7 @@ class RouteSecurity:
         >>>    return {"status": "ok"}
         """
         if (client := request.client) and ipaddress.ip_address(client.host).is_private:
-            return self.auth_client_from(request)
+            return self.client(request)
         raise fastapi.HTTPException(status_code=403)
 
     def authenticated(self, request: fastapi.Request) -> Client:
@@ -172,7 +172,7 @@ class RouteSecurity:
         should only allow clients that are unathenticated.
 
         If the client is not making the request is not authenticated, an HTTP
-        403 status will be returned.
+        401 Unauthorized will be returned.
 
         For example, a route can be configured as the following example:
 
@@ -193,12 +193,15 @@ class RouteSecurity:
 
         >>> @router.get("/me")
         >>> async def me(
-        >>>     auth_client: Annotated[
+        >>>     client: Annotated[
         >>>         Client, Security(route_security.authenticated)]
         >>> ) -> dict[str, Any]:
         >>>    return auth_client.model_dump()
         """
-        return self.scopes(request, fastapi.security.SecurityScopes(None))
+        auth_client = self.client(request)
+        if auth_client.is_authenticated:
+            return auth_client
+        raise fastapi.HTTPException(status_code=401)
 
     def scopes(
         self, request: fastapi.Request, scopes: fastapi.security.SecurityScopes
@@ -209,8 +212,10 @@ class RouteSecurity:
         that should only allow clients that have been granted the necessary
         scope(s).
 
-        If the client is not making the request does not possess any of the
-        required scopes, an HTTP 403 status will be returned.
+        If an unauthenticated client is making the request an HTTP 401
+        Unauthorized will be returned. If the client is authenticated but
+        does not possess any of the required scopes, an HTTP 403 status will
+        be returned.
 
         For example, a route can be configured as the following example:
 
@@ -241,13 +246,12 @@ class RouteSecurity:
         >>> ) -> dict[str, Any]:
         >>>    return client.model_dump()
         """
-        auth_client = self.auth_client_from(request)
-        if auth_client.is_authenticated:
-            if not scopes.scopes:
+        auth_client = self.authenticated(request)
+        if not scopes.scopes:
+            return auth_client
+        for scope in scopes.scopes:
+            if scope in auth_client.scopes:
                 return auth_client
-            for scope in scopes.scopes:
-                if scope in auth_client.scopes:
-                    return auth_client
         raise fastapi.HTTPException(status_code=403)
 
     @staticmethod
@@ -391,7 +395,7 @@ class RouteSecurity:
 
             auth_client: Client | None
             if (
-                not (auth_client := self.auth_client_from(request))
+                not (auth_client := self.client(request))
                 and on_auth_basic is not None
                 and client_id is not None
                 and client_secret is not None
