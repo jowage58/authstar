@@ -152,13 +152,20 @@ class RouteSecurity:
     DEFAULT_OAUTH2_TOKEN_PATH = "/oauth2/token"  # noqa: S105
 
     def __init__(
-        self, *, scope_key: str = AuthstarMiddleware.DEFAULT_SCOPE_KEY
+        self,
+        *,
+        scope_key: str = AuthstarMiddleware.DEFAULT_SCOPE_KEY,
+        is_admin_attribute: str | None = None,
     ) -> None:
         """The 'scope_key' should match the one used to configure the
         AuthstarMiddleware. The key is used to retrieve the client information
         from the Scope.
+
+        If `is_admin_attribute` is defined and that attribute returns a True
+        value then scope checks will be bypassed.
         """
         self.scope_key = scope_key
+        self.is_admin_attribute = is_admin_attribute
 
     def client(self, request: fastapi.Request) -> Client:
         """Returns the client from the given Request."""
@@ -279,9 +286,12 @@ class RouteSecurity:
         auth_client = self.authenticated(request)
         if not scopes.scopes:
             return auth_client
-        for scope in scopes.scopes:
-            if scope in auth_client.scopes:
-                return auth_client
+        if self.is_admin_attribute is not None and getattr(
+            auth_client, self.is_admin_attribute
+        ):
+            return auth_client
+        if set(auth_client.scopes) & set(scopes.scopes):
+            return auth_client
         raise ForbiddenError(client=auth_client)
 
     @staticmethod
