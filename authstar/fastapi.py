@@ -89,7 +89,8 @@ class HTTPBasic(fastapi.security.HTTPBasic):
     """
 
     async def __call__(  # type: ignore[override]
-        self, request: fastapi.Request  # noqa: ARG002
+        self,
+        request: fastapi.Request,  # noqa: ARG002
     ) -> fastapi.security.HTTPBasicCredentials | None:
         return None
 

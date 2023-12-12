@@ -33,7 +33,7 @@ insecure_router.post(route_security.DEFAULT_OAUTH2_TOKEN_PATH)(
 
 @insecure_router.get("/status")
 async def api_status(
-    client: Annotated[APIClient, Security(route_security.internal)]
+    client: Annotated[APIClient, Security(route_security.internal)],
 ) -> dict[str, Any]:
     return {
         "client": client,
@@ -71,13 +71,13 @@ async def auth_logout(request: Request) -> Response:
 async def secret_route_scopes(
     api_client: Annotated[
         APIClient, Security(route_security.scopes, scopes=["api:dev2"])
-    ]
+    ],
 ) -> APIClient:
     return api_client
 
 
 @router.get("/secret/authed")
 async def secret_route_authenticated(
-    api_client: Annotated[APIClient, Security(route_security.authenticated)]
+    api_client: Annotated[APIClient, Security(route_security.authenticated)],
 ) -> APIClient:
     return api_client

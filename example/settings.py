@@ -11,7 +11,7 @@ PROJECT_ROOT = PACKAGE_ROOT.parent
 
 
 class SharedSettings(pydantic_settings.BaseSettings):
-    model_config = {"env_file": PROJECT_ROOT / ".env", "frozen": True}  # noqa: RUF012
+    model_config = {"env_file": PROJECT_ROOT / ".env", "frozen": True}
 
 
 class LogSettings(SharedSettings, env_prefix="LOG_"):
