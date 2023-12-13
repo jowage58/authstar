@@ -20,9 +20,6 @@ dynamic = ["version", "description"]
 Home = "https://github.com/jowage58/authstar"
 Source = "https://github.com/jowage58/authstar"
 
-[tool.black]
-target-version = ["py311"]
-
 [tool.mypy]
 packages = ["authstar"]
 strict = true
