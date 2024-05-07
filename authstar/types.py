@@ -1,6 +1,7 @@
 """
 Authstar Types
 """
+
 import dataclasses
 from collections.abc import Awaitable, Callable
 from typing import Any, NamedTuple, Protocol, Self, TypeAlias

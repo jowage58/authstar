@@ -3,6 +3,7 @@ Authstar FastAPI extension
 
 Provides route security and an OAuth2 token endpoint.
 """
+
 import collections.abc
 import dataclasses
 import ipaddress
