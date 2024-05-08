@@ -22,7 +22,7 @@ from .types import (
 
 logger = logging.getLogger(__name__)
 
-HEADER_ENCODING = "iso-8859-1"
+HEADER_ENCODING = "latin-1"
 
 
 class AuthstarMiddleware:
