@@ -2,6 +2,7 @@ import logging
 
 import fastapi
 import fastapi.exception_handlers
+import uvicorn
 from starlette.middleware.sessions import SessionMiddleware
 
 import authstar
@@ -48,8 +49,6 @@ async def on_unauthorized_error(
 
 
 def run() -> None:
-    import uvicorn
-
     uvicorn.run(
         "example.app:app",
         log_level="info",
