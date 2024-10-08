@@ -54,7 +54,7 @@ async def auth_bearer(token: str) -> Client | None:
         value=token, key=str(settings.SECRET_KEY), algorithms=["HS256"]
     )
     joserfc.jwt.JWTClaimsRegistry(
-        leeway=5.0,
+        leeway=5,
         jti={"essential": True},
         sub={"essential": True},
         scope={"essential": True},

@@ -21,9 +21,13 @@ Home = "https://github.com/jowage58/authstar"
 Source = "https://github.com/jowage58/authstar"
 
 [tool.mypy]
-packages = ["authstar"]
+packages = ["authstar", "example"]
 strict = true
 warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = ["aiocache"]
+ignore_missing_imports = true
 
 [tool.ruff]
 target-version = "py311"
