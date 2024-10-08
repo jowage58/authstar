@@ -14,9 +14,7 @@ _cfg = Config(env_file=PROJECT_ROOT / ".env")
 
 VERSION = _cfg("API_VERSION", default=__version__)
 DEBUG = _cfg("API_DEBUG", cast=bool, default=False)
-SECRET_KEY = _cfg(
-    "API_SECRET_KEY", cast=Secret, default=Secret(secrets.token_urlsafe(32))
-)
+SECRET_KEY = _cfg("API_SECRET_KEY", cast=Secret, default=secrets.token_urlsafe(32))
 AUTH_TOKEN_CACHE_URL = _cfg("API_AUTH_TOKEN_CACHE_URL", default="memory://")
 AUTH_TOKEN_CACHE_TTL = _cfg("API_AUTH_TOKEN_CACHE_TTL", cast=float, default=180.0)
 
