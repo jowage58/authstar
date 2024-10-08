@@ -2,42 +2,33 @@ import logging
 import secrets
 from pathlib import Path
 
-import pydantic_settings
+from starlette.config import Config
+from starlette.datastructures import Secret
 
 __version__ = "0.0.1"
 
 PACKAGE_ROOT = Path(__file__).parent
 PROJECT_ROOT = PACKAGE_ROOT.parent
 
+_cfg = Config(env_file=PROJECT_ROOT / ".env")
 
-class SharedSettings(pydantic_settings.BaseSettings):
-    model_config = {"env_file": PROJECT_ROOT / ".env", "frozen": True}
+VERSION = _cfg("API_VERSION", default=__version__)
+DEBUG = _cfg("API_DEBUG", cast=bool, default=False)
+SECRET_KEY = _cfg(
+    "API_SECRET_KEY", cast=Secret, default=Secret(secrets.token_urlsafe(32))
+)
+AUTH_TOKEN_CACHE_URL = _cfg("API_AUTH_TOKEN_CACHE_URL", default="memory://")
+AUTH_TOKEN_CACHE_TTL = _cfg("API_AUTH_TOKEN_CACHE_TTL", cast=float, default=180.0)
 
-
-class LogSettings(SharedSettings, env_prefix="LOG_"):
-    level_app: str = "INFO"
-    level_root: str = "INFO"
-    level_uvicorn: str = "INFO"
-
-
-log = LogSettings()
+LOG_LEVEL_ROOT = _cfg("LOG_LEVEL_ROOT", default="INFO")
+LOG_LEVEL_UVICORN = _cfg("LOG_LEVEL_UVICORN", default="INFO")
+LOG_LEVEL_APP = _cfg("LOG_LEVEL_APP", default="INFO")
 
 logging.basicConfig(
-    format="%(asctime)s [%(levelname)s] %(name)s:%(funcName)s %(message)s"
+    format="%(asctime)s [%(levelname)s] %(name)s:%(funcName)s %(message)s",
+    level=LOG_LEVEL_ROOT,
 )
-logging.getLogger().setLevel(log.level_root)
-logging.getLogger("uvicorn").setLevel(log.level_uvicorn)
+logging.getLogger("uvicorn").setLevel(LOG_LEVEL_UVICORN)
 
 logger = logging.getLogger("example")
-logger.setLevel(log.level_app)
-
-
-class APISettings(SharedSettings, env_prefix="API_"):
-    version: str = __version__
-    debug: bool = False
-    secret_key: str = secrets.token_urlsafe(32)
-    auth_token_cache_url: str = "memory://"
-    auth_token_cache_ttl: float = 180.0
-
-
-api = APISettings()
+logger.setLevel(LOG_LEVEL_APP)

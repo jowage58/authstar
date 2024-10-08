@@ -40,7 +40,7 @@ async def oauth2_token_builder(
         "email": client.email,
     }
     token = joserfc.jwt.encode(
-        header={"alg": "HS256"}, claims=payload, key=settings.api.secret_key
+        header={"alg": "HS256"}, claims=payload, key=str(settings.SECRET_KEY)
     )
     return OAuth2TokenResponse(
         access_token=token,
@@ -51,7 +51,7 @@ async def oauth2_token_builder(
 async def auth_bearer(token: str) -> Client | None:
     logger.info("auth_bearer(%s)", token)
     jwt_token = joserfc.jwt.decode(
-        value=token, key=settings.api.secret_key, algorithms=["HS256"]
+        value=token, key=str(settings.SECRET_KEY), algorithms=["HS256"]
     )
     joserfc.jwt.JWTClaimsRegistry(
         leeway=5.0,
@@ -68,7 +68,7 @@ async def auth_bearer(token: str) -> Client | None:
     )
 
 
-@aiocache.cached(ttl=settings.api.auth_token_cache_ttl)  # type: ignore[misc]
+@aiocache.cached(ttl=settings.AUTH_TOKEN_CACHE_TTL)  # type: ignore[misc]
 async def auth_basic(username: str, password: str) -> Client | None:
     logger.info("auth_basic(%s, %s)", username, "*" * len(password))
     return APIClient(
@@ -76,7 +76,7 @@ async def auth_basic(username: str, password: str) -> Client | None:
     )
 
 
-@aiocache.cached(ttl=settings.api.auth_token_cache_ttl)  # type: ignore[misc]
+@aiocache.cached(ttl=settings.AUTH_TOKEN_CACHE_TTL)  # type: ignore[misc]
 async def auth_api_key(token: str) -> Client | None:
     logger.info("auth_api_key(%s)", "*" * len(token))
     return APIClient(client_id="x-api-key user")

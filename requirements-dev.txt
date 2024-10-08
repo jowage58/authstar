@@ -4,7 +4,6 @@ itsdangerous==2.2.0
 joserfc==1.0.0
 mypy~=1.11
 pydantic==2.9.2
-pydantic-settings==2.5.2
 pytest~=8.3
 python-dotenv==1.0.1
 python-multipart==0.0.12

@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 app = fastapi.FastAPI(
     debug=True,
     title="Authstar Test API",
-    version=settings.api.version,
+    version=settings.VERSION,
 )
 
 app.add_middleware(
@@ -27,7 +27,7 @@ app.add_middleware(
 
 app.add_middleware(
     SessionMiddleware,
-    secret_key=settings.api.secret_key,
+    secret_key=str(settings.SECRET_KEY),
     max_age=3600,
     same_site="strict",
     https_only=True,
