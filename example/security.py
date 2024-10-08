@@ -4,8 +4,8 @@ import time
 import uuid
 from typing import cast
 
-import aiocache
 import joserfc.jwt
+from async_lru import alru_cache
 
 from authstar import AuthstarClient, Client
 from authstar import Scope as Scope  # noqa: PLC0414
@@ -68,7 +68,7 @@ async def auth_bearer(token: str) -> Client | None:
     )
 
 
-@aiocache.cached(ttl=settings.AUTH_TOKEN_CACHE_TTL)  # type: ignore[misc]
+@alru_cache(ttl=settings.AUTH_TOKEN_CACHE_TTL)
 async def auth_basic(username: str, password: str) -> Client | None:
     logger.info("auth_basic(%s, %s)", username, "*" * len(password))
     return APIClient(
@@ -76,7 +76,7 @@ async def auth_basic(username: str, password: str) -> Client | None:
     )
 
 
-@aiocache.cached(ttl=settings.AUTH_TOKEN_CACHE_TTL)  # type: ignore[misc]
+@alru_cache(ttl=settings.AUTH_TOKEN_CACHE_TTL)
 async def auth_api_key(token: str) -> Client | None:
     logger.info("auth_api_key(%s)", "*" * len(token))
     return APIClient(client_id="x-api-key user")
