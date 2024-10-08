@@ -6,7 +6,7 @@ from authstar.middleware import (
 )
 
 
-@pytest.fixture()
+@pytest.fixture
 def test_scope():
     return {
         "headers": [
