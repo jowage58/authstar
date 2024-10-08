@@ -5,7 +5,6 @@ joserfc==1.0.0
 mypy~=1.11
 pydantic==2.9.2
 pytest~=8.3
-python-dotenv==1.0.1
 python-multipart==0.0.12
 starlette>=0.38.6
 uvicorn[standard]==0.31.0
