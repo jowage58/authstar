@@ -6,6 +6,10 @@ if [[ $1 == "clean" ]]; then
     rm -rf .*cache/
 fi
 
+if [[ -d .venv/bin ]]; then
+    export PATH=.venv/bin:$PATH
+fi
+
 echo "CI is set to [${CI}]"
 if [[ $CI != "true" ]]; then
     pre-commit run --all-files

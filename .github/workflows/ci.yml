@@ -15,21 +15,25 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
       - uses: pre-commit/action@v3.0.1
         with:
           extra_args: --all-files --verbose
 
-  test:
+  check:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    name: python ${{ matrix.python-version }} checks
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
+          architecture: x64
+      - uses: astral-sh/setup-uv@v3
       - name: install dependencies
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          pip install --upgrade --upgrade-strategy eager -r requirements-dev.txt
+        run: uv sync --frozen --no-python-downloads
       - name: run checks
         run: bash run_checks.sh
