@@ -18,7 +18,7 @@ app = fastapi.FastAPI(
 )
 
 app.add_middleware(
-    authstar.AuthstarMiddleware,  # type: ignore[arg-type]
+    authstar.AuthstarMiddleware,
     on_auth_bearer=security.auth_bearer,
     on_auth_basic=security.auth_basic,
     on_auth_header=authstar.HeaderAuth.x_api_key(security.auth_api_key),
