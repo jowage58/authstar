@@ -23,19 +23,19 @@ Source = "https://github.com/jowage58/authstar"
 
 [dependency-groups]
 dev = [
-    "async-lru>=2.0.4",
-    "fastapi>=0.115.6",
+    "async-lru>=2.0.5",
+    "fastapi>=0.115.12",
     "httptools>=0.6.4",
     "itsdangerous>=2.2.0",
-    "joserfc>=1.0.1",
-    "mypy>=1.13.0",
-    "pydantic>=2.10.3",
-    "pytest>=8.3.3",
-    "python-multipart>=0.0.19",
-    "starlette>=0.41.3",
-    "uvicorn>=0.32.0",
+    "joserfc>=1.1.0",
+    "mypy>=1.16.0",
+    "pydantic>=2.11.5",
+    "pytest>=8.4.0",
+    "python-multipart>=0.0.20",
+    "starlette>=0.46.2",
+    "uvicorn>=0.34.3",
     "uvloop>=0.21.0; sys_platform == 'linux'",
-    "watchfiles>=1.0.3",
+    "watchfiles>=1.0.5",
 ]
 
 [tool.mypy]

@@ -70,7 +70,7 @@ class OAuth2TokenResponse:
     """
 
     access_token: str
-    token_type: str = "Bearer"
+    token_type: str = "Bearer"  # noqa: S105
     expires_in: int = 3600
     refresh_token: str | None = None
     scope: str | None = None
