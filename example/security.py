@@ -4,6 +4,7 @@ import time
 import uuid
 from typing import cast
 
+import joserfc.jwk
 import joserfc.jwt
 from async_lru import alru_cache
 
@@ -18,6 +19,7 @@ logger = logging.getLogger(__name__)
 route_security = RouteSecurity()
 
 JWT_CLAIMS_ISSUER = "https://api.local"
+JWT_KEY = joserfc.jwk.OctKey.import_key(str(settings.SECRET_KEY))
 
 
 @dataclasses.dataclass
@@ -39,9 +41,7 @@ async def oauth2_token_builder(
         "scope": " ".join(client.scopes),
         "email": client.email,
     }
-    token = joserfc.jwt.encode(
-        header={"alg": "HS256"}, claims=payload, key=str(settings.SECRET_KEY)
-    )
+    token = joserfc.jwt.encode(header={"alg": "HS256"}, claims=payload, key=JWT_KEY)
     return OAuth2TokenResponse(
         access_token=token,
         scope=oauth_req.scope,
@@ -50,9 +50,7 @@ async def oauth2_token_builder(
 
 async def auth_bearer(token: str) -> Client | None:
     logger.info("auth_bearer(%s)", token)
-    jwt_token = joserfc.jwt.decode(
-        value=token, key=str(settings.SECRET_KEY), algorithms=["HS256"]
-    )
+    jwt_token = joserfc.jwt.decode(value=token, key=JWT_KEY, algorithms=["HS256"])
     joserfc.jwt.JWTClaimsRegistry(
         leeway=5,
         jti={"essential": True},
