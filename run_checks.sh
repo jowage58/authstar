@@ -18,4 +18,7 @@ fi
 mypy --version
 mypy
 
+ty --version
+ty check
+
 pytest
