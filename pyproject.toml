@@ -1,9 +1,15 @@
 [build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
+requires = ["uv_build>=0.9.3,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "authstar"
+module-root = ""
 
 [project]
 name = "authstar"
+version = "0.0.6.dev"
+description = "Authstar ASGI Middleware for client authentication"
 authors = [{name = "John Wagenleitner", email = "johnwa@mail.fresnostate.edu"}]
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -13,7 +19,6 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Intended Audience :: Developers",
 ]
-dynamic = ["version", "description"]
 requires-python = ">=3.11,<3.14.0"
 dependencies = []
 
@@ -33,7 +38,7 @@ dev = [
     "pytest>=8.4.0",
     "python-multipart>=0.0.20",
     "starlette>=0.48.0",
-    "ty>=0.0.1a22",
+    "ty>=0.0.1a23",
     "uvicorn>=0.37.0",
     "uvloop>=0.21.0; sys_platform == 'linux'",
     "watchfiles>=1.1.1",
