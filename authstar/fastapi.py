@@ -77,7 +77,7 @@ class OAuth2TokenResponse:
 
 
 # Async function that can create an OAuth2 token response
-OAuth2TokenResponseBuilder: typing.TypeAlias = collections.abc.Callable[
+type OAuth2TokenResponseBuilder = collections.abc.Callable[
     [OAuth2TokenRequest, Client], collections.abc.Awaitable[OAuth2TokenResponse]
 ]
 

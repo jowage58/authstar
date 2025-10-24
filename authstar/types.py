@@ -4,14 +4,14 @@ Authstar Types
 
 import dataclasses
 from collections.abc import Awaitable, Callable
-from typing import Any, NamedTuple, Protocol, Self, TypeAlias
+from typing import Any, NamedTuple, Protocol, Self
 
 # ASGI Types used by the Middleware
-Scope: TypeAlias = dict[str, Any]
-Message: TypeAlias = dict[str, Any]
-Receive: TypeAlias = Callable[[], Awaitable[Message]]
-Send: TypeAlias = Callable[[Message], Awaitable[None]]
-ASGIApp: TypeAlias = Callable[[Scope, Receive, Send], Awaitable[None]]
+type Scope = dict[str, Any]
+type Message = dict[str, Any]
+type Receive = Callable[[], Awaitable[Message]]
+type Send = Callable[[Message], Awaitable[None]]
+type ASGIApp = Callable[[Scope, Receive, Send], Awaitable[None]]
 
 
 class Client(Protocol):
@@ -80,9 +80,9 @@ class UnauthenticatedAuthstarClient(Client):
 UNAUTHENTICATED_CLIENT = UnauthenticatedAuthstarClient()
 
 # Async functions used to perform the various authentications
-BasicAuthenticator: TypeAlias = Callable[[str, str], Awaitable[Client | None]]
-TokenAuthenticator: TypeAlias = Callable[[str], Awaitable[Client | None]]
-ScopeAuthenticator: TypeAlias = Callable[[Scope], Awaitable[Client | None]]
+type BasicAuthenticator = Callable[[str, str], Awaitable[Client | None]]
+type TokenAuthenticator = Callable[[str], Awaitable[Client | None]]
+type ScopeAuthenticator = Callable[[Scope], Awaitable[Client | None]]
 
 
 class HeaderAuth(NamedTuple):

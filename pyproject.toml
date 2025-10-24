@@ -8,7 +8,7 @@ module-root = ""
 
 [project]
 name = "authstar"
-version = "0.0.6.dev"
+version = "0.0.6"
 description = "Authstar ASGI Middleware for client authentication"
 authors = [{name = "John Wagenleitner", email = "johnwa@mail.fresnostate.edu"}]
 readme = "README.md"
@@ -19,7 +19,7 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Intended Audience :: Developers",
 ]
-requires-python = ">=3.11,<3.14.0"
+requires-python = ">=3.12,<3.15.0"
 dependencies = []
 
 [project.urls]
@@ -29,18 +29,18 @@ Source = "https://github.com/jowage58/authstar"
 [dependency-groups]
 dev = [
     "async-lru>=2.0.5",
-    "fastapi>=0.119.0",
+    "fastapi>=0.120.0",
     "httptools>=0.7.1",
     "itsdangerous>=2.2.0",
     "joserfc>=1.4.0",
     "mypy>=1.16.0",
-    "pydantic>=2.12.2",
-    "pytest>=8.4.0",
+    "pydantic>=2.12.3",
+    "pytest>=8.4.2",
     "python-multipart>=0.0.20",
     "starlette>=0.48.0",
-    "ty>=0.0.1a23",
-    "uvicorn>=0.37.0",
-    "uvloop>=0.21.0; sys_platform == 'linux'",
+    "ty>=0.0.1a24",
+    "uvicorn>=0.38.0",
+    "uvloop>=0.22.1; sys_platform == 'linux'",
     "watchfiles>=1.1.1",
 ]
 
@@ -50,7 +50,7 @@ strict = true
 warn_unreachable = true
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py312"
 extend-exclude = [".*"]
 
 [tool.ruff.format]

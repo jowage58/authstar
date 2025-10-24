@@ -34,12 +34,14 @@ def test_header_value_from_returns_first(test_scope):
 
 def test_parse_auth_header_value_bearer():
     val = parse_auth_header_value("Bearer sekret")
+    assert val is not None
     assert val.scheme == "bearer"
     assert val.token == "sekret"
 
 
 def test_parse_auth_header_value_basic():
     val = parse_auth_header_value("Basic sekret")
+    assert val is not None
     assert val.scheme == "basic"
     assert val.token == "sekret"
 
