@@ -1,5 +1,5 @@
 [build-system]
-requires = ["uv_build>=0.9.3,<0.10.0"]
+requires = ["uv_build>=0.9.14,<0.10.0"]
 build-backend = "uv_build"
 
 [tool.uv.build-backend]
@@ -8,7 +8,7 @@ module-root = ""
 
 [project]
 name = "authstar"
-version = "0.0.6"
+version = "0.0.7.dev"
 description = "Authstar ASGI Middleware for client authentication"
 authors = [{name = "John Wagenleitner", email = "johnwa@mail.fresnostate.edu"}]
 readme = "README.md"
@@ -29,16 +29,16 @@ Source = "https://github.com/jowage58/authstar"
 [dependency-groups]
 dev = [
     "async-lru>=2.0.5",
-    "fastapi>=0.120.0",
+    "fastapi>=0.123.0",
     "httptools>=0.7.1",
     "itsdangerous>=2.2.0",
-    "joserfc>=1.4.0",
-    "mypy>=1.16.0",
-    "pydantic>=2.12.3",
-    "pytest>=8.4.2",
+    "joserfc>=1.5.0",
+    "mypy>=1.19.0",
+    "pydantic>=2.12.5",
+    "pytest>=9.0.1",
     "python-multipart>=0.0.20",
-    "starlette>=0.48.0",
-    "ty>=0.0.1a24",
+    "starlette>=0.50.0",
+    "ty>=0.0.1a29",
     "uvicorn>=0.38.0",
     "uvloop>=0.22.1; sys_platform == 'linux'",
     "watchfiles>=1.1.1",
