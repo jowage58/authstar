@@ -33,7 +33,6 @@ dev = [
     "httptools>=0.7.1",
     "itsdangerous>=2.2.0",
     "joserfc>=1.6.2",
-    "mypy>=1.19.1",
     "pydantic>=2.12.5",
     "pytest>=9.0.2",
     "python-multipart>=0.0.22",
@@ -43,11 +42,6 @@ dev = [
     "uvloop>=0.22.1; sys_platform == 'linux'",
     "watchfiles>=1.1.1",
 ]
-
-[tool.mypy]
-packages = ["authstar", "example"]
-strict = true
-warn_unreachable = true
 
 [tool.ruff]
 target-version = "py312"

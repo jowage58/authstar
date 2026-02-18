@@ -89,7 +89,7 @@ class HTTPBasic(fastapi.security.HTTPBasic):
     by the OpenAPI docs to prompt for HTTP Basic authentication.
     """
 
-    async def __call__(  # type: ignore[override]
+    async def __call__(
         self,
         request: fastapi.Request,  # noqa: ARG002
     ) -> fastapi.security.HTTPBasicCredentials | None:
