@@ -18,7 +18,7 @@ app = fastapi.FastAPI(
 )
 
 app.add_middleware(
-    authstar.AuthstarMiddleware,  # ty: ignore[invalid-argument-type]
+    authstar.AuthstarMiddleware,
     on_auth_bearer=security.auth_bearer,
     on_auth_basic=security.auth_basic,
     on_auth_header=authstar.HeaderAuth.x_api_key(security.auth_api_key),
@@ -26,7 +26,7 @@ app.add_middleware(
 )
 
 app.add_middleware(
-    SessionMiddleware,  # ty: ignore[invalid-argument-type]
+    SessionMiddleware,
     secret_key=str(settings.SECRET_KEY),
     max_age=3600,
     same_site="strict",

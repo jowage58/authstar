@@ -5,7 +5,7 @@ from pathlib import Path
 from starlette.config import Config
 from starlette.datastructures import Secret
 
-__version__ = "0.0.1"
+__version__ = "1.0.0"
 
 PACKAGE_ROOT = Path(__file__).parent
 PROJECT_ROOT = PACKAGE_ROOT.parent
