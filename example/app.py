@@ -18,6 +18,12 @@ app = fastapi.FastAPI(
 )
 
 app.add_middleware(
+    authstar.LogMiddleware,
+    logger_name="example",
+    excluded_paths=["/status"],
+)
+
+app.add_middleware(
     authstar.AuthstarMiddleware,
     on_auth_bearer=security.auth_bearer,
     on_auth_basic=security.auth_basic,
@@ -53,6 +59,7 @@ def run() -> None:
         "example.app:app",
         log_level="info",
         reload=True,
+        access_log=False,
     )
 
 

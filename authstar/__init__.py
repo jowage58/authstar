@@ -5,7 +5,7 @@ Provides middleware that accepts various authenticator functions that are
 used to identify clients making requests.
 """
 
-from .middleware import AuthstarMiddleware
+from .middleware import AuthstarMiddleware, LogMiddleware
 from .types import (
     AuthstarClient,
     BasicAuthenticator,
@@ -22,6 +22,7 @@ __all__ = [
     "BasicAuthenticator",
     "Client",
     "HeaderAuth",
+    "LogMiddleware",
     "Scope",
     "ScopeAuthenticator",
     "TokenAuthenticator",

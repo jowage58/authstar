@@ -2,8 +2,10 @@
 Authstar ASGI Middleware
 """
 
+import asyncio
 import base64
 import logging
+from collections.abc import Collection
 from typing import ClassVar
 
 from .types import (
@@ -13,6 +15,7 @@ from .types import (
     BasicAuthenticator,
     Client,
     HeaderAuth,
+    Message,
     Receive,
     Scope,
     ScopeAuthenticator,
@@ -135,6 +138,97 @@ class AuthstarMiddleware:
         return (
             f"{self.__class__.__qualname__}(scope_key={self.scope_key!r}"
             f", methods={auth_methods!r})"
+        )
+
+
+class LogMiddleware:
+    """
+    Middleware that can be configured for access logging.
+
+    Example of configuring the middleware using FastAPI:
+
+    >>> from typing import Any
+
+    >>> import authstar
+
+    >>> app: Any  # Starlette/FastAPI or other ASGI framework
+    >>> app.add_middleware(
+    >>>     authstar.LogMiddleware,
+    >>>     logger_name="myapp",
+    >>>     excluded_paths=["/api/health"],
+    >>> )
+    """
+
+    def __init__(
+        self,
+        app: ASGIApp,
+        logger_name: str,
+        excluded_paths: Collection[str] | None = None,
+    ) -> None:
+        self.app = app
+        self.logger = logging.getLogger(logger_name)
+        self.excluded_paths = set(excluded_paths or [])
+        self.time_func = asyncio.get_running_loop().time
+
+    async def log(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] not in {"http", "websocket"}:
+            await self.app(scope, receive, send)
+            return
+
+        path = scope.get("root_path", "") + scope["path"]
+        if path in self.excluded_paths:
+            await self.app(scope, receive, send)
+            return
+
+        if query := scope["query_string"]:
+            path += f"?{query.decode()}"
+
+        client_ip = scope.get("client", (None, None))[0]
+
+        logger.info(
+            'start: %s - %s %s HTTP/%s - "%s"',
+            client_ip,
+            scope["method"],
+            path,
+            scope["http_version"],
+            header_value_from(scope, "user-agent"),
+        )
+
+        wrapped = {}
+
+        async def send_wrapper(message: Message) -> None:
+            if message["type"] == "http.response.start":
+                wrapped["status_code"] = message["status"]
+            await send(message)
+
+        tick_start = self.time_func()
+        try:
+            await self.app(scope, receive, send_wrapper)
+        except Exception as exc:
+            logger.info(
+                "end: %s [%r] - %s %s - %s",
+                500,
+                exc,
+                scope["method"],
+                path,
+                f"{self.time_func() - tick_start:.3f}",
+            )
+            raise exc from None
+        else:
+            logger.info(
+                "end: %s - %s %s - %s",
+                wrapped["status_code"],
+                scope["method"],
+                path,
+                f"{self.time_func() - tick_start:.3f}",
+            )
+
+    __call__ = log
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__qualname__}(logger_name={self.logger.name!r}"
+            f", excluded_paths={self.excluded_paths!r})"
         )
 
 
