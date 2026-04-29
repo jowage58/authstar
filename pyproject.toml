@@ -29,15 +29,15 @@ Source = "https://github.com/jowage58/authstar"
 [dependency-groups]
 dev = [
     "async-lru>=2.3.0",
-    "fastapi>=0.135.3",
+    "fastapi>=0.136.1",
     "itsdangerous>=2.2.0",
     "joserfc>=1.6.4",
-    "pydantic>=2.13.0",
+    "pydantic>=2.13.3",
     "pytest>=9.0.3",
-    "python-multipart>=0.0.26",
+    "python-multipart>=0.0.27",
     "starlette>=1.0.0",
-    "ty>=0.0.29",
-    "uvicorn>=0.44.0",
+    "ty>=0.0.33",
+    "uvicorn>=0.46.0",
     "uvloop>=0.22.1; sys_platform == 'linux'",
     "watchfiles>=1.1.1",
 ]
@@ -78,7 +78,6 @@ select = [
     "UP",  # pyupgrade
     "W",  # pycodestyle (warnings)
 ]
-ignore = ["ISC001"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["S101", "S105"]
