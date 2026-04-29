@@ -185,7 +185,7 @@ class LogMiddleware:
 
         client_ip = scope.get("client", (None, None))[0]
 
-        logger.info(
+        self.logger.info(
             'start: %s - %s %s HTTP/%s - "%s"',
             client_ip,
             scope["method"],
@@ -205,7 +205,7 @@ class LogMiddleware:
         try:
             await self.app(scope, receive, send_wrapper)
         except Exception as exc:
-            logger.info(
+            self.logger.info(
                 "end: %s [%r] - %s %s - %s",
                 500,
                 exc,
@@ -215,7 +215,7 @@ class LogMiddleware:
             )
             raise exc from None
         else:
-            logger.info(
+            self.logger.info(
                 "end: %s - %s %s - %s",
                 wrapped["status_code"],
                 scope["method"],
