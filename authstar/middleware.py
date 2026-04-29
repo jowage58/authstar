@@ -6,7 +6,7 @@ import asyncio
 import base64
 import logging
 from collections.abc import Collection
-from typing import ClassVar
+from typing import ClassVar, Protocol, Self
 
 from .types import (
     UNAUTHENTICATED_CLIENT,
@@ -26,6 +26,11 @@ from .types import (
 logger = logging.getLogger(__name__)
 
 HEADER_ENCODING = "latin-1"
+
+
+class RequestContext(Protocol):
+    @classmethod
+    def create_from_scope(cls, scope: Scope) -> Self: ...
 
 
 class AuthstarMiddleware:
@@ -230,6 +235,43 @@ class LogMiddleware:
             f"{self.__class__.__qualname__}(logger_name={self.logger.name!r}"
             f", excluded_paths={self.excluded_paths!r})"
         )
+
+
+class ContextMiddleware:
+    """
+    Middleware that can be configured pass the scope to a ContextVar.
+
+    Example of configuring the middleware using FastAPI:
+
+    >>> import uuid
+    >>> from typing import Any
+
+    >>> import authstar
+
+    >>> app: Any  # Starlette/FastAPI or other ASGI framework
+    >>> app.add_middleware(
+    >>>     authstar.ContextMiddleware,
+    >>>     context_class=RequestContext,
+    >>> )
+    """
+
+    def __init__(
+        self,
+        app: ASGIApp,
+        context_class: type[RequestContext],
+    ) -> None:
+        self.app = app
+        self.context_class = context_class
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] not in {"http", "websocket"}:
+            await self.app(scope, receive, send)
+            return
+        self.context_class.create_from_scope(scope)
+        await self.app(scope, receive, send)
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__qualname__}(class={self.context_class.__name__!r})"
 
 
 def parse_auth_header(scope: Scope) -> AuthHeaderParseResult | None:
