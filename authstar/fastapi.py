@@ -182,7 +182,7 @@ class RouteSecurity:
         If the client is not making the request from an internal network, an HTTP
         403 status will be returned.
 
-        For example, if the application provides a healthcheck endpoint that only a
+        For example, if the application provides a health check endpoint that only a
         fronting load balancer/proxy should access and that access is made via an
         internal network, the route can be configured as the following example:
 
@@ -196,7 +196,7 @@ class RouteSecurity:
         >>>     "/healthcheck",
         >>>     dependencies=[Security(route_security.internal)],
         >>> )
-        >>> async def healthcheck() -> dict[str, str]:
+        >>> async def health_check() -> dict[str, str]:
         >>>    return {"status": "ok"}
         """
         auth_client = self.client(request)
@@ -208,7 +208,7 @@ class RouteSecurity:
         """Returns the client if the request came from an authenticated client.
 
         This method is designed to be used as a route dependency for any route that
-        should only allow clients that are unathenticated.
+        should only allow clients that are unauthenticated.
 
         If the client is not making the request is not authenticated, an HTTP
         401 Unauthorized will be returned.
