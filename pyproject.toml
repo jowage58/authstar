@@ -28,18 +28,18 @@ Source = "https://github.com/jowage58/authstar"
 [dependency-groups]
 dev = [
     "async-lru>=2.3.0",
-    "fastapi>=0.136.1",
+    "fastapi>=0.136.3",
     "itsdangerous>=2.2.0",
-    "joserfc>=1.6.5",
-    "prek>=0.4.0",
+    "joserfc>=1.6.8",
+    "prek>=0.4.3",
     "pydantic>=2.13.4",
     "pytest>=9.0.3",
-    "python-multipart>=0.0.28",
-    "starlette>=1.0.0",
-    "ty>=0.0.36",
-    "uvicorn>=0.47.0",
+    "python-multipart>=0.0.29",
+    "starlette>=1.2.0",
+    "ty>=0.0.40",
+    "uvicorn>=0.48.0",
     "uvloop>=0.22.1; sys_platform == 'linux'",
-    "watchfiles>=1.1.1",
+    "watchfiles>=1.2.0",
 ]
 
 [tool.ruff]
