@@ -47,8 +47,8 @@ class AuthstarClient(Client):
         return dataclasses.asdict(self)
 
     @classmethod
-    def model_validate(cls, model: dict[str, Any]) -> Self:  # ty: ignore[invalid-method-override]
-        return cls(**model)
+    def model_validate(cls, data: dict[str, Any]) -> Self:
+        return cls(**data)
 
 
 @dataclasses.dataclass(frozen=True)
