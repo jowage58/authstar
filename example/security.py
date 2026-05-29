@@ -8,8 +8,7 @@ import joserfc.jwk
 import joserfc.jwt
 from async_lru import alru_cache
 
-from authstar import AuthstarClient, Client
-from authstar import Scope as Scope  # noqa: PLC0414
+from authstar import AuthstarClient, Client, Scope
 from authstar.fastapi import OAuth2TokenRequest, OAuth2TokenResponse, RouteSecurity
 
 from . import settings
