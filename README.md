@@ -26,20 +26,16 @@ from authstar import AuthstarMiddleware, Client, HeaderAuth, Scope
 app = fastapi.FastAPI()
 
 
-async def on_auth_bearer(token: str) -> Client | None:
-    ...
+async def on_auth_bearer(token: str) -> Client | None: ...
 
 
-async def on_auth_basic(username: str, password: str) -> Client | None:
-    ...
+async def on_auth_basic(username: str, password: str) -> Client | None: ...
 
 
-async def on_auth_api_key(token: str) -> Client | None:
-    ...
+async def on_auth_api_key(token: str) -> Client | None: ...
 
 
-async def on_auth_scope_session(scope: Scope) -> Client | None:
-    ...
+async def on_auth_scope_session(scope: Scope) -> Client | None: ...
 
 
 app.add_middleware(
@@ -93,8 +89,7 @@ router = APIRouter(dependencies=[Security(route_security.authenticated)])
 
 
 @insecure_router.get("/")
-async def homepage():
-    ...
+async def homepage(): ...
 
 
 @insecure_router.get("/healthcheck", dependencies=[Security(route_security.internal)])
@@ -122,7 +117,7 @@ async def foo() -> dict[str, str]:
 
 @router.get("/me")
 async def me(
-    auth_client: Annotated[Client, Security(route_security.authenticated)]
+    auth_client: Annotated[Client, Security(route_security.authenticated)],
 ) -> dict[str, Any]:
     """Returns HTTP 403 unless client is unauthenticated.
 
@@ -137,7 +132,9 @@ async def me(
 
 @router.get("/me2")
 async def me2(
-    auth_client: Annotated[Client, Security(route_security.scopes, scopes=["api-user"])]
+    auth_client: Annotated[
+        Client, Security(route_security.scopes, scopes=["api-user"])
+    ],
 ) -> dict[str, Any]:
     """Returns HTTP 403 unless client is unauthenticated and has the given scope(s).
 
@@ -166,14 +163,17 @@ from fastapi import APIRouter
 router = APIRouter()
 route_security = RouteSecurity()
 
+
 async def oauth2_token_builder(
     oauth_req: OAuth2TokenRequest, client: Client
 ) -> OAuth2TokenResponse:
-   # build a JWT and use it to return the response
-   pass
+    # build a JWT and use it to return the response
+    pass
+
 
 async def verify_auth_basic(username: str, password: str) -> Client | None:
     pass
+
 
 router.post("/oauth2/token")(
     route_security.oauth2_token_endpoint(
