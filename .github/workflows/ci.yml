@@ -23,7 +23,7 @@ jobs:
     name: python ${{ matrix.python-version }} checks
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10.0.1
+      - uses: astral-sh/setup-uv@v10.1.0
         with:
           python-version: ${{ matrix.python-version }}
           enable-cache: true
