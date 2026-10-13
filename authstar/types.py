@@ -58,9 +58,9 @@ class UnauthenticatedAuthstarClient(Client):
     Model used when a client is not returned by any authenticators.
     """
 
-    client_id: str = ""
-    scopes: list[str] = dataclasses.field(default_factory=list)
-    is_authenticated: bool = False
+    client_id: str = ""  # ty: ignore[invalid-attribute-override]
+    scopes: list[str] = dataclasses.field(default_factory=list)  # ty: ignore[invalid-attribute-override]
+    is_authenticated: bool = False  # ty: ignore[invalid-attribute-override]
 
     def model_dump(self) -> dict[str, Any]:
         return dataclasses.asdict(self)
