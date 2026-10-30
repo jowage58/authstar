@@ -89,7 +89,7 @@ class HTTPBasic(fastapi.security.HTTPBasic):
     by the OpenAPI docs to prompt for HTTP Basic authentication.
     """
 
-    async def __call__(
+    async def __call__(  # ty: ignore[invalid-method-override]
         self,
         request: fastapi.Request,  # noqa: ARG002
     ) -> fastapi.security.HTTPBasicCredentials | None:
@@ -103,7 +103,7 @@ class APIKeyHeader(fastapi.security.APIKeyHeader):
     by the OpenAPI docs to prompt for an API Key token value.
     """
 
-    async def __call__(self, request: fastapi.Request) -> str | None:  # noqa: ARG002
+    async def __call__(self, request: fastapi.Request) -> str | None:  # noqa: ARG002  # ty: ignore[invalid-method-override]
         return None
 
 
@@ -137,7 +137,7 @@ class OAuth2ClientCredentials(fastapi.security.OAuth2):
             auto_error=auto_error,
         )
 
-    async def __call__(self, request: fastapi.Request) -> str | None:  # noqa: ARG002
+    async def __call__(self, request: fastapi.Request) -> str | None:  # noqa: ARG002  # ty: ignore[invalid-method-override]
         return None
 
 

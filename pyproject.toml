@@ -1,5 +1,5 @@
 [build-system]
-requires = ["uv_build>=0.13.0,<0.14.0"]
+requires = ["uv_build>=0.13.6,<0.14.0"]
 build-backend = "uv_build"
 
 [tool.uv.build-backend]
@@ -28,15 +28,15 @@ Source = "https://github.com/jowage58/authstar"
 [dependency-groups]
 dev = [
     "async-lru>=2.4.0",
-    "fastapi>=0.143.0",
+    "fastapi>=0.162.0",
     "itsdangerous>=2.2.0",
-    "joserfc>=1.7.5",
-    "prek>=0.5.5",
-    "pydantic>=2.14.1",
-    "pytest>=9.1.1",
+    "joserfc>=1.7.7",
+    "prek>=0.5.9",
+    "pydantic>=2.14.2",
+    "pytest>=9.2.0",
     "python-multipart>=0.0.32",
-    "starlette>=1.8.0",
-    "ty>=0.0.86",
+    "starlette>=1.10.0",
+    "ty>=0.0.95",
     "uvicorn>=0.54.0",
     "uvloop>=0.23.0; sys_platform == 'linux'",
     "watchfiles>=1.3.0",

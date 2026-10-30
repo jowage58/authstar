@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: j178/prek-action@v2
+      - uses: j178/prek-action@v3.1.0
 
   check:
     runs-on: ubuntu-latest
@@ -23,7 +23,7 @@ jobs:
     name: python ${{ matrix.python-version }} checks
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10.3.2
+      - uses: astral-sh/setup-uv@v10.3.3
         with:
           python-version: ${{ matrix.python-version }}
           enable-cache: true
